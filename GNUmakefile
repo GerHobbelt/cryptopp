@@ -6,7 +6,7 @@ CXXFLAGS = -DNDEBUG -g -O2
 # CXXFLAGS += -ffunction-sections -fdata-sections
 # LDFLAGS += -Wl,--gc-sections
 ARFLAGS = -cr	# ar needs the dash on OpenBSD
-RANLIB = ranlib
+#RANLIB = ranlib
 CP = cp
 MKDIR = mkdir
 EGREP = egrep
@@ -16,7 +16,7 @@ ISMINGW = $(shell uname | $(EGREP) -c "MINGW32")
 
 # Default prefix for make install
 ifeq ($(PREFIX),)
-PREFIX = /usr
+PREFIX = $(BT_PATH)/libcryptoxx-5.6.0
 endif
 
 ifeq ($(CXX),gcc)	# for some reason CXX is gcc on cygwin 1.1.4
@@ -32,7 +32,7 @@ GAS217_OR_LATER = $(shell echo "" | $(AS) -v 2>&1 | $(EGREP) -c "GNU assembler v
 
 ifneq ($(GCC42_OR_LATER),0)
 ifneq ($(UNAME),Darwin)
-CXXFLAGS += -march=native -mtune=native
+#CXXFLAGS += -march=native -mtune=native
 endif
 endif
 
