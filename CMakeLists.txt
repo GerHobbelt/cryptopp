@@ -329,6 +329,13 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /FI\"winapifamily.h\"" )
 endif ()
 
+if (CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+
+	# Avoid some warnings on modern Clang compilers
+
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-tautological-compare -Wno-undefined-var-template -Wno-deprecated-declarations -Wno-unknown-warning-option")
+endif()
+
 # Enable PIC for all target machines except 32-bit i386 due to register pressures.
 if (NOT CRYPTOPP_I386)
 	SET(CMAKE_POSITION_INDEPENDENT_CODE 1)
@@ -389,6 +396,14 @@ list(REMOVE_ITEM cryptopp_SOURCES
 		${CMAKE_CURRENT_SOURCE_DIR}/simple.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/winpipes.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/cryptlib_bds.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/algebra.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/strciphr.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/polynomi.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/eprecomp.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/dh.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/elgamal.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/eccrypto.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/mqv.cpp
 		${cryptopp_SOURCES_TEST}
 		)
 set(cryptopp_SOURCES
@@ -751,90 +766,4 @@ if (BUILD_DOCUMENTATION)
 				COMMAND ${CMAKE_COMMAND} -E remove_directory "${in_source_DOCS_DIR}"
 		)
 	endif ()
-endif ()
-
-#============================================================================
-# Install
-#============================================================================
-
-set(export_name "cryptopp-targets")
-
-# Runtime package
-if (BUILD_SHARED)
-	install(
-			TARGETS cryptopp-shared
-			EXPORT ${export_name}
-			DESTINATION ${CMAKE_INSTALL_LIBDIR}
-			RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-			LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-			ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	)
-endif ()
-
-# Development package
-if (BUILD_STATIC)
-	install(TARGETS cryptopp-static EXPORT ${export_name} DESTINATION ${CMAKE_INSTALL_LIBDIR})
-endif ()
-install(FILES ${cryptopp_HEADERS} DESTINATION include/cryptopp)
-
-# CMake Package
-if (NOT CMAKE_VERSION VERSION_LESS 2.8.8)	# CMakePackageConfigHelpers is supported from 2.8.8
-	include(CMakePackageConfigHelpers)
-	write_basic_package_version_file("${PROJECT_BINARY_DIR}/cryptopp-config-version.cmake" VERSION ${cryptopp_VERSION_MAJOR}.${cryptopp_VERSION_MINOR}.${cryptopp_VERSION_PATCH} COMPATIBILITY SameMajorVersion)
-	install(FILES cryptopp-config.cmake ${PROJECT_BINARY_DIR}/cryptopp-config-version.cmake DESTINATION "lib/cmake/cryptopp")
-	install(EXPORT ${export_name} DESTINATION "lib/cmake/cryptopp")
-endif ()
-
-# Tests
-if (BUILD_TESTING)
-	install(TARGETS cryptest DESTINATION ${CMAKE_INSTALL_BINDIR})
-	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/TestData DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cryptopp)
-	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/TestVectors DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cryptopp)
-endif ()
-
-# Documentation
-if (BUILD_DOCUMENTATION)
-	install(DIRECTORY "${out_source_DOCS_DIR}" DESTINATION ${CMAKE_INSTALL_DOCDIR})
-endif ()
-
-# Print a configuration summary. We want CXX and CXXFLAGS, but they are not includd in ALL.
-if (NOT CMAKE_VERSION VERSION_LESS 3.0.2)
-	if (CRYPTOPP_I386)
-		message(STATUS "Platform: i386/i686")
-	elseif (CRYPTOPP_AMD64)
-		message(STATUS "Platform: x86_64")
-	elseif (CRYPTOPP_X32)
-		message(STATUS "Platform: x86_64-x32")
-	elseif (CRYPTOPP_ARMHF)
-		message(STATUS "Platform: armhf")
-	elseif (CRYPTOPP_ARM)
-		message(STATUS "Platform: arm")
-	elseif (CRYPTOPP_AARCH32)
-		message(STATUS "Platform: Aarch32")
-	elseif (CRYPTOPP_AARCH64)
-		message(STATUS "Platform: Aarch64")
-	elseif (CRYPTOPP_SPARC)
-		message(STATUS "Platform: Sparc")
-	elseif (CRYPTOPP_SPARC64)
-		message(STATUS "Platform: Sparc64")
-	elseif (CRYPTOPP_POWERPC)
-		message(STATUS "Platform: PowerPC")
-	elseif (CRYPTOPP_POWERPC64)
-		message(STATUS "Platform: PowerPC64")
-	elseif (CRYPTOPP_MINGW32)
-		message(STATUS "Platform: MinGW-32")
-	elseif (CRYPTOPP_MINGW32)
-		message(STATUS "Platform: MinGW-64")
-	endif ()
-	if (CRYPTOPP_ARMV7A_NEON)
-		message(STATUS "NEON: TRUE")
-	endif ()
-	if (CRYPTOPP_NATIVE_ARCH)
-		message(STATUS "Native arch: TRUE")
-	else ()
-		message(STATUS "Native arch: FALSE")
-	endif ()
-	message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
-	message(STATUS "Flags: ${CMAKE_CXX_FLAGS}")
-	message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 endif ()
