@@ -1,10 +1,3 @@
-# Please ensure your changes or patch meets minimum requirements.
-#   The minimum requirements are 2.8.6. It roughly equates to
-#   Ubuntu 14.05 LTS or Solaris 11.3. Please do not check in something
-#   for 3.5.0 or higher because it will break LTS operating systems
-#   and a number of developer boards used for testing. To test your
-#   changes, please set up a Ubuntu 14.05 LTS system.
-
 # Should we be setting things like this? We are not a C project
 # so nothing should be done with the C compiler. But there is
 # no reliable way to tell CMake we are C++.
@@ -29,19 +22,10 @@ endif()
 # Print useful information
 message( STATUS "CMake version ${CMAKE_VERSION}" )
 
-cmake_minimum_required(VERSION 2.8.6)
-if (${CMAKE_VERSION} VERSION_LESS "3.0.0")
-  project(cryptopp)
-  set(cryptopp_VERSION_MAJOR 8)
-  set(cryptopp_VERSION_MINOR 2)
-  set(cryptopp_VERSION_PATCH 0)
-else ()
-  cmake_policy(SET CMP0048 NEW)
-  project(cryptopp VERSION 8.2.0)
-  if (NOT ${CMAKE_VERSION} VERSION_LESS "3.1.0")
-    cmake_policy(SET CMP0054 NEW)
-  endif ()
-endif ()
+cmake_minimum_required(VERSION 3.3)
+cmake_policy(SET CMP0048 NEW)
+project(cryptopp VERSION 8.2.0)
+cmake_policy(SET CMP0054 NEW)
 
 # Need to set SRC_DIR manually after removing the Python library code.
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
