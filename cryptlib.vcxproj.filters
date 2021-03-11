@@ -143,6 +143,18 @@
     <ClCompile Include="dh2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dilithium.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dilithium_ntt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dilithium_poly.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dilithium_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="dll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -266,6 +278,18 @@
     <ClCompile Include="keccak_simd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="kyber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="kyber_ntt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="kyber_poly.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="kyber_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="lea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -378,6 +402,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="rw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="saber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="saber_poly.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="saber_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="safer.cpp">
@@ -669,6 +702,9 @@
     <ClInclude Include="dh2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dilithium.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="dmac.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -795,6 +831,9 @@
     <ClInclude Include="keccak.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="kyber.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="lubyrack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -919,6 +958,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="rw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="saber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="safer.h">

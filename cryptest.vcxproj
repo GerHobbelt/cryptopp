@@ -218,12 +218,15 @@
     <ClCompile Include="bench2.cpp" />
     <ClCompile Include="bench3.cpp" />
     <ClCompile Include="datatest.cpp" />
+    <ClCompile Include="dilithium_test.cpp" />
     <ClCompile Include="dlltest.cpp" />
     <ClCompile Include="fipsalgt.cpp" />
+    <ClCompile Include="kyber_test.cpp" />
     <ClCompile Include="regtest1.cpp" />
     <ClCompile Include="regtest2.cpp" />
     <ClCompile Include="regtest3.cpp" />
     <ClCompile Include="regtest4.cpp" />
+    <ClCompile Include="saber_test.cpp" />
     <ClCompile Include="validat0.cpp" />
     <ClCompile Include="validat1.cpp" />
     <ClCompile Include="validat2.cpp" />
@@ -239,7 +242,10 @@
   <!-- Header Files -->
   <ItemGroup>
     <ClInclude Include="bench.h" />
+    <ClInclude Include="dilithium_test.h" />
     <ClInclude Include="factory.h" />
+    <ClInclude Include="kyber_test.h" />
+    <ClInclude Include="saber_test.h" />
     <ClInclude Include="validate.h" />
   </ItemGroup>
   <!-- Test Vectors -->

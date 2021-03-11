@@ -222,6 +222,10 @@
     <ClCompile Include="dessp.cpp" />
     <ClCompile Include="dh.cpp" />
     <ClCompile Include="dh2.cpp" />
+    <ClCompile Include="dilithium.cpp" />
+    <ClCompile Include="dilithium_ntt.cpp" />
+    <ClCompile Include="dilithium_poly.cpp" />
+    <ClCompile Include="dilithium_utils.cpp" />
     <ClCompile Include="dll.cpp">
       <PrecompiledHeader />
     </ClCompile>
@@ -270,6 +274,10 @@
     <ClCompile Include="keccak.cpp" />
     <ClCompile Include="keccak_core.cpp" />
     <ClCompile Include="keccak_simd.cpp" />
+    <ClCOmpile Include="kyber.cpp" />
+    <ClCOmpile Include="kyber_ntt.cpp" />
+    <ClCOmpile Include="kyber_poly.cpp" />
+    <ClCOmpile Include="kyber_utils.cpp" />
     <ClCompile Include="lea.cpp" />
     <ClCompile Include="lea_simd.cpp" />
     <ClCompile Include="luc.cpp" />
@@ -310,6 +318,9 @@
     <ClCompile Include="rng.cpp" />
     <ClCompile Include="rsa.cpp" />
     <ClCompile Include="rw.cpp" />
+    <ClCompile Include="saber.cpp" />
+    <ClCompile Include="saber_poly.cpp" />
+    <ClCompile Include="saber_utils.cpp" />
     <ClCompile Include="safer.cpp" />
     <ClCompile Include="salsa.cpp" />
     <ClCompile Include="scrypt.cpp" />
@@ -450,6 +461,7 @@
     <ClInclude Include="des.h" />
     <ClInclude Include="dh.h" />
     <ClInclude Include="dh2.h" />
+    <ClInclude Include="dilithium.h" />
     <ClInclude Include="dmac.h" />
     <ClInclude Include="drbg.h" />
     <ClInclude Include="donna.h" />
@@ -492,6 +504,7 @@
     <ClInclude Include="iterhash.h" />
     <ClInclude Include="kalyna.h" />
     <ClInclude Include="keccak.h" />
+    <ClInclude Include="kyber.h" />
     <ClInclude Include="lubyrack.h" />
     <ClInclude Include="lea.h" />
     <ClInclude Include="luc.h" />
@@ -534,7 +547,8 @@
     <ClInclude Include="rng.h" />
     <ClInclude Include="rsa.h" />
     <ClInclude Include="rw.h" />
-    <ClInclude Include="safer.h" />
+    <ClInclude Include="saber.h" />
+    <ClInclude Include="safer.h" /> 
     <ClInclude Include="salsa.h" />
     <ClInclude Include="scrypt.h" />
     <ClInclude Include="seal.h" />

@@ -108,6 +108,11 @@ dh.cpp
 dh.h
 dh2.cpp
 dh2.h
+dilithium.cpp
+dilithium.h
+dilithium_ntt.cpp
+dilithium_poly.cpp
+dilithium_utils.cpp
 dll.cpp
 dll.h
 dlltest.cpp
@@ -200,6 +205,11 @@ keccak.cpp
 keccak_core.cpp
 keccak_simd.cpp
 keccak.h
+kyber.cpp
+kyber.h
+kyber_ntt.cpp
+kyber_poly.cpp
+kyber_utils.cpp
 lubyrack.h
 lea.cpp
 lea_simd.cpp
@@ -295,6 +305,10 @@ rsa.cpp
 rsa.h
 rw.cpp
 rw.h
+saber.cpp
+saber.h
+saber_poly.cpp
+saber_utils.cpp
 safer.cpp
 safer.h
 salsa.cpp
