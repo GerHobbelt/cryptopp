@@ -97,6 +97,8 @@ local.properties
 
 [Dd]ebug/
 [Rr]elease/
+Debug*/
+Release*/
 Win32/
 x64/
 Arm/
