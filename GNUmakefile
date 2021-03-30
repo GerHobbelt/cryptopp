@@ -149,16 +149,6 @@ ifeq ($(IS_AIX),1)
   endif
 endif
 
-# libc++ is LLVM's standard C++ library. If we add libc++
-# here then all user programs must use it too. The open
-# question is, which choice is easier on users?
-ifneq ($(IS_DARWIN),0)
-  CXX ?= c++
-  # CRYPTOPP_CXXFLAGS += -stdlib=libc++
-  AR = libtool
-  ARFLAGS = -static -o
-endif
-
 # Uncomment for debugging
 # $(info Here's what we found... IS_X86: $(IS_X86), IS_X64: $(IS_X64), IS_ARM32: $(IS_ARM32), IS_ARMV8: $(IS_ARMV8))
 
@@ -841,6 +831,24 @@ ifeq ($(XLC_COMPILER),1)
   endif  # -qsuppress
 endif  # IBM XL C++ compiler
 
+# libc++ is LLVM's standard C++ library. If we add libc++
+# here then all user programs must use it too. The open
+# question is, which choice is easier on users?
+ifneq ($(IS_DARWIN),0)
+  CXX ?= c++
+  # CRYPTOPP_CXXFLAGS += -stdlib=libc++
+  ifeq ($(findstring -fno-common,$(CXXFLAGS)),)
+    CRYPTOPP_CXXFLAGS += -fno-common
+  endif
+  IS_APPLE_LIBTOOL=$(shell libtool -V 2>&1 | $(GREP) -i -c 'Apple')
+  ifeq ($(IS_APPLE_LIBTOOL),1)
+    AR = libtool
+  else
+    AR = /usr/bin/libtool
+  endif
+  ARFLAGS = -static -o
+endif
+
 # Add -xregs=no%appl SPARC. SunCC should not use certain registers in library code.
 # https://docs.oracle.com/cd/E18659_01/html/821-1383/bkamt.html
 ifneq ($(IS_SPARC32)$(IS_SPARC64),00)
@@ -1285,7 +1293,7 @@ clean:
 	-$(RM) adhoc.cpp.o adhoc.cpp.proto.o $(CLEAN_OBJS) rdrand-*.o
 	@-$(RM) libcryptopp.a libcryptopp.dylib cryptopp.dll libcryptopp.dll.a libcryptopp.import.a
 	@-$(RM) libcryptopp.so libcryptopp.so$(SOLIB_COMPAT_SUFFIX) libcryptopp.so$(SOLIB_VERSION_SUFFIX)
-	@-$(RM) cryptest.exe dlltest.exe cryptest.import.exe cryptest.info ct et
+	@-$(RM) cryptest.exe dlltest.exe cryptest.import.exe cryptest.dat ct et
 	@-$(RM) *.la *.lo *.gcov *.gcno *.gcda *.stackdump core core-*
 	@-$(RM) /tmp/adhoc.exe
 	@-$(RM) -r /tmp/cryptopp_test/
@@ -1313,6 +1321,7 @@ android-clean:
 .PHONY: distclean
 distclean: clean autotools-clean cmake-clean android-clean
 	-$(RM) adhoc.cpp adhoc.cpp.copied GNUmakefile.deps benchmarks.html cryptest.txt
+	-$(RM) cryptest_all.info cryptest_debug.info cryptest_noasm.info cryptest_base.info cryptest.info cryptest_release.info
 	@-$(RM) cryptest-*.txt cryptopp.tgz libcryptopp.pc *.o *.bc *.ii *~
 	@-$(RM) -r cryptlib.lib cryptest.exe *.suo *.sdf *.pdb Win32/ x64/ ipch/
 	@-$(RM) -r $(LIBOBJS:.o=.obj) $(TESTOBJS:.o=.obj)
@@ -1480,9 +1489,9 @@ endif
 convert:
 	@-$(CHMOD) u=rwx,go=rx $(EXEC_DIRS)
 	@-$(CHMOD) u=rw,go=r $(TEXT_FILES) *.supp .*.yml *.asm *.zip TestVectors/*.txt TestData/*.dat TestPrograms/*.cxx
-	@-$(CHMOD) u=rwx,go=rx $(EXEC_FILES)
+	@-$(CHMOD) u=rwx,go=rx $(EXEC_FILES) *.sh
 	-unix2dos --keepdate --quiet $(TEXT_FILES) .*.yml *.asm TestScripts/*.cmd TestScripts/*.txt TestScripts/*.cpp
-	-dos2unix --keepdate --quiet GNUmakefile GNUmakefile-cross *.S *.supp *.mapfile TestScripts/*.sh
+	-dos2unix --keepdate --quiet GNUmakefile GNUmakefile-cross *.sh *.S *.supp *.mapfile TestScripts/*.sh
 ifneq ($(IS_DARWIN),0)
 	@-xattr -c *
 endif
@@ -1712,11 +1721,11 @@ endif
 
 .PHONY: osx_warning
 osx_warning:
-ifeq ($(IS_DARWIN),1)
+ifeq ($(IS_DARWIN)$(CLANG_COMPILER),11)
   ifeq ($(findstring -stdlib=libc++,$(CRYPTOPP_CXXFLAGS)$(CXXFLAGS)),)
 	$(info )
 	$(info INFO: Crypto++ was built without LLVM's libc++. If you are using the library)
-	$(info INFO: with Xcode, then you should add -stdlib=libc++ to CXXFLAGS. It is)
+	$(info INFO: with modern Xcode, then you should add -stdlib=libc++ to CXXFLAGS. It is)
 	$(info INFO: already present in the makefile, and you only need to uncomment it.)
 	$(info )
   endif
