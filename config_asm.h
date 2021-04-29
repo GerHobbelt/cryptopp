@@ -169,9 +169,11 @@
 
 // Guessing at SHA for SunCC. Its not in Sun Studio 12.6. Also see
 // http://stackoverflow.com/questions/45872180/which-xarch-for-sha-extensions-on-solaris
+// Guessing for Intel ICPC. A slide deck says SHA support is in version 16.0-beta
+// https://www.alcf.anl.gov/files/ken_intel_compiler_optimization.pdf
 #if !defined(CRYPTOPP_DISABLE_SHANI) && defined(CRYPTOPP_SSE42_AVAILABLE) && \
 	(defined(__SHA__) || (CRYPTOPP_MSC_VERSION >= 1900) || (__SUNPRO_CC >= 0x5160) || \
-	(CRYPTOPP_GCC_VERSION >= 40900) || (__INTEL_COMPILER >= 1300) || \
+	(CRYPTOPP_GCC_VERSION >= 40900) || (__INTEL_COMPILER >= 1600) || \
 	(CRYPTOPP_LLVM_CLANG_VERSION >= 30400) || (CRYPTOPP_APPLE_CLANG_VERSION >= 50100))
 	#define CRYPTOPP_SHANI_AVAILABLE 1
 #endif
@@ -210,6 +212,12 @@
 #if defined(__SUNPRO_CC) && (__SUNPRO_CC <= 0x5150)
 # undef CRYPTOPP_CLMUL_AVAILABLE
 #endif
+
+// Clang intrinsic casts, http://bugs.llvm.org/show_bug.cgi?id=20670
+#define M128_CAST(x) ((__m128i *)(void *)(x))
+#define CONST_M128_CAST(x) ((const __m128i *)(const void *)(x))
+#define M256_CAST(x) ((__m256i *)(void *)(x))
+#define CONST_M256_CAST(x) ((const __m256i *)(const void *)(x))
 
 #endif  // CRYPTOPP_DISABLE_ASM
 
