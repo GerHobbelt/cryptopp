@@ -55,7 +55,7 @@
 ///   static const DebugTrapHandler g_dummyHandler;
 ///   \#endif
 ///
-///   int main(int argc, char* argv[])
+///   int main(int argc, const char** argv)
 ///   {
 ///      CRYPTOPP_ASSERT(argv != nullptr);
 ///      ...
@@ -139,7 +139,7 @@ NAMESPACE_BEGIN(CryptoPP)
 ///   const DebugTrapHandler g_dummyHandler;
 ///   \#endif
 ///
-///   int main(int argc, char* argv[])
+///   int main(int argc, const char** argv)
 ///   {
 ///      CRYPTOPP_ASSERT(argv != nullptr);
 ///      ...
