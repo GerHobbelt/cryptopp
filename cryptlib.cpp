@@ -1031,11 +1031,19 @@ public:
 #elif HAVE_MSC_INIT_PRIORITY
   #pragma warning(disable: 4073)
   #pragma init_seg(lib)
+
+extern "C" int fzPushHeapDbgPurpose(const char* s, int l);
+extern "C" int fzPopHeapDbgPurpose(int related_dummy, int l);
+  static int HEAPDBG_SECTION_START = fzPushHeapDbgPurpose(__FILE__, __LINE__);
+
   const std::string DEFAULT_CHANNEL = "";
   const std::string AAD_CHANNEL = "AAD";
   const NullNameValuePairs s_nullNameValuePairs;
   const NameValuePairs& g_nullNameValuePairs = s_nullNameValuePairs;
-  #pragma warning(default: 4073)
+
+  static int HEAPDBG_SECTION_END = fzPopHeapDbgPurpose(HEAPDBG_SECTION_START, __LINE__);
+
+#pragma warning(default: 4073)
 #elif HAVE_XLC_INIT_PRIORITY
   #pragma priority(260)
   const std::string DEFAULT_CHANNEL = "";

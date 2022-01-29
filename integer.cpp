@@ -4886,7 +4886,7 @@ public:
 	const Integer g_two __attribute__ ((init_priority (CRYPTOPP_INIT_PRIORITY + 13))) = Integer(2L);
 #elif defined(HAVE_MSC_INIT_PRIORITY)
 	#pragma warning(disable: 4075)
-	#pragma init_seg(".CRT$XCU")
+	#pragma init_seg(".CRT$XCU")  // equiv. of `#pragma init_seg(user)`
 	const InitInteger s_init;
 	const Integer g_zero(0L);
 	const Integer g_one(1L);
