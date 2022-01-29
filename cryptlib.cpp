@@ -15,6 +15,7 @@
 
 #ifndef CRYPTOPP_IMPORTS
 
+#include "debugheap.h"
 #include "cryptlib.h"
 #include "filters.h"
 #include "algparam.h"
@@ -1032,16 +1033,16 @@ public:
   #pragma warning(disable: 4073)
   #pragma init_seg(lib)
 
-extern "C" int fzPushHeapDbgPurpose(const char* s, int l);
-extern "C" int fzPopHeapDbgPurpose(int related_dummy, int l);
-  static int HEAPDBG_SECTION_START = fzPushHeapDbgPurpose(__FILE__, __LINE__);
+  // NOTE: these markers MUST follow the #pragma init_seg(lib) or it won't fly they MUST be included in the
+  // same segment as the globals they're 'wrapping'.
+  FZ_HEAPDBG_TRACKER_SECTION_START_MARKER(_)
 
   const std::string DEFAULT_CHANNEL = "";
   const std::string AAD_CHANNEL = "AAD";
   const NullNameValuePairs s_nullNameValuePairs;
   const NameValuePairs& g_nullNameValuePairs = s_nullNameValuePairs;
 
-  static int HEAPDBG_SECTION_END = fzPopHeapDbgPurpose(HEAPDBG_SECTION_START, __LINE__);
+  FZ_HEAPDBG_TRACKER_SECTION_END_MARKER(_)
 
 #pragma warning(default: 4073)
 #elif HAVE_XLC_INIT_PRIORITY
