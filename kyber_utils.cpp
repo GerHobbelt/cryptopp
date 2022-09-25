@@ -224,7 +224,7 @@ int16_t Kyber<T_K,T_Compr>::MontgomeryReduce(int32_t a)
   t = (int32_t)u*Q;
   t = a - t;
   t >>= 16;
-  return t;
+  return (int16_t)t;
 }
 
 
