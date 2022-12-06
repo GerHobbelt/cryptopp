@@ -304,6 +304,13 @@ ifeq ($(DETECT_FEATURES),1)
   # Need SSE2 or higher for these tests
   ifneq ($(SSE2_FLAG),)
 
+    TPROG = TestPrograms/test_x86_sse3.cpp
+    TOPT = $(SSE3_FLAG)
+    HAVE_OPT = $(shell $(TCOMMAND) 2>&1 | wc -w)
+    ifneq ($(strip $(HAVE_OPT)),0)
+      SSE3_FLAG =
+    endif
+
     TPROG = TestPrograms/test_x86_ssse3.cpp
     TOPT = $(SSSE3_FLAG)
     HAVE_OPT = $(shell $(TCOMMAND) 2>&1 | wc -w)
@@ -1366,7 +1373,7 @@ sources: adhoc.cpp
 DOCUMENT_DIRECTORY := ref$(LIB_VER)
 # Directory Doxygen uses (specified in Doygen config file)
 ifeq ($(wildcard Doxyfile),Doxyfile)
-DOXYGEN_DIRECTORY := $(strip $(shell $(GREP) "OUTPUT_DIRECTORY" Doxyfile | $(GREP) -v "\#" | cut -d "=" -f 2))
+DOXYGEN_DIRECTORY := $(strip $(shell $(GREP) "OUTPUT_DIRECTORY" Doxyfile | $(GREP) -v "#" | cut -d "=" -f 2))
 endif
 # Default directory (in case its missing in the config file)
 ifeq ($(strip $(DOXYGEN_DIRECTORY)),)
