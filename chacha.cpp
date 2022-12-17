@@ -10,6 +10,9 @@
 #include "misc.h"
 #include "cpu.h"
 
+#undef min
+#undef max
+
 // Internal compiler error in GCC 3.3 and below
 #if defined(__GNUC__) && (__GNUC__ < 4)
 # undef CRYPTOPP_SSE2_INTRIN_AVAILABLE

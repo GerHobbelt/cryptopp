@@ -20,6 +20,9 @@
 # include <omp.h>
 #endif
 
+#undef min
+#undef max
+
 // https://github.com/weidai11/cryptopp/issues/777
 #if CRYPTOPP_GCC_DIAGNOSTIC_AVAILABLE
 # if defined(__clang__)
