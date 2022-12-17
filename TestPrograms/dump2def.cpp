@@ -95,7 +95,12 @@ void PrintHelpAndExit(int code)
     std::exit((code == ErrorSuccess ? 0 : 1));
 }
 
-int main(int argc, char* argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      crp_dump2def_tool(cnt, arr)
+#endif
+
+int main(int argc, const char** argv)
 {
     // ******************** Handle Options ******************** //
 

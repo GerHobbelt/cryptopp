@@ -92,7 +92,7 @@
 // Global namespace, provided by other source files
 void FIPS140_SampleApplication();
 void RegisterFactories(CryptoPP::Test::TestClass suites);
-int (*AdhocTest)(int argc, char *argv[]) = NULLPTR;
+int (*AdhocTest)(int argc, const char **argv) = NULLPTR;
 
 NAMESPACE_BEGIN(CryptoPP)
 NAMESPACE_BEGIN(Test)
@@ -119,10 +119,10 @@ void EncryptFile(const char *in, const char *out, const char *passPhrase);
 void DecryptFile(const char *in, const char *out, const char *passPhrase);
 
 void SecretShareFile(int threshold, int nShares, const char *filename, const char *seed);
-void SecretRecoverFile(int threshold, const char *outFilename, char *const *inFilenames);
+void SecretRecoverFile(int threshold, const char *outFilename, const char *const *inFilenames);
 
 void InformationDisperseFile(int threshold, int nShares, const char *filename);
-void InformationRecoverFile(int threshold, const char *outFilename, char *const *inFilenames);
+void InformationRecoverFile(int threshold, const char *outFilename, const char *const *inFilenames);
 
 void GzipFile(const char *in, const char *out, int deflate_level);
 void GunzipFile(const char *in, const char *out);
@@ -135,7 +135,7 @@ void HexDecode(const char *infile, const char *outfile);
 void FIPS140_GenerateRandomFiles();
 
 bool Validate(int, bool);
-bool SetGlobalSeed(int argc, char* argv[], std::string& seed);
+bool SetGlobalSeed(int argc, const char** argv, std::string& seed);
 void SetArgvPathHint(const char* argv0, std::string& pathHint);
 
 ANONYMOUS_NAMESPACE_BEGIN
@@ -161,7 +161,7 @@ static const SignalHandler<SIGTRAP, false> s_dummyHandler;
 // static const DebugTrapHandler s_dummyHandler;
 #endif
 
-int scoped_main(int argc, char *argv[])
+int scoped_main(int argc, const char **argv)
 {
 #ifdef _CRTDBG_LEAK_CHECK_DF
 	// Turn on leak-checking
@@ -475,7 +475,7 @@ int scoped_main(int argc, char *argv[])
 	}
 } // main()
 
-bool SetGlobalSeed(int argc, char* argv[], std::string& seed)
+bool SetGlobalSeed(int argc, const char** argv, std::string& seed)
 {
 	bool ret = false;
 
@@ -814,7 +814,7 @@ void SecretShareFile(int threshold, int nShares, const char *filename, const cha
 	source.PumpAll();
 }
 
-void SecretRecoverFile(int threshold, const char *outFilename, char *const *inFilenames)
+void SecretRecoverFile(int threshold, const char *outFilename, const char *const *inFilenames)
 {
 	CRYPTOPP_ASSERT(threshold >= 1 && threshold <=1000);
 	if (threshold < 1 || threshold > 1000)
@@ -870,7 +870,7 @@ void InformationDisperseFile(int threshold, int nShares, const char *filename)
 	source.PumpAll();
 }
 
-void InformationRecoverFile(int threshold, const char *outFilename, char *const *inFilenames)
+void InformationRecoverFile(int threshold, const char *outFilename, const char *const *inFilenames)
 {
 	CRYPTOPP_ASSERT(threshold<=1000);
 	if (threshold < 1 || threshold > 1000)
@@ -1113,7 +1113,12 @@ NAMESPACE_END  // CryptoPP
 // a 'using namespace CryptoPP', it causes compile failures.
 // Also see http://github.com/weidai11/cryptopp/issues/442
 // and http://github.com/weidai11/cryptopp/issues/447.
-int CRYPTOPP_API main(int argc, char *argv[])
+
+#if defined(BUILD_MONOLITHIC)
+#define main(cnt, arr)      crp_test_tool(cnt, arr)
+#endif
+
+int CRYPTOPP_API main(int argc, const char** argv)
 {
 	return CryptoPP::Test::scoped_main(argc, argv);
 }
