@@ -158,7 +158,7 @@ bool ValidateRSA_Encrypt()
 		rsaPriv.DEREncodePrivateKey(q);
 
 		RSA::PrivateKey rsaPriv2;
-		rsaPriv2.BERDecodePrivateKey(q, true, q.MaxRetrievable());
+		rsaPriv2.BERDecodePrivateKey(q, true, (size_t)q.MaxRetrievable());
 
 		fail = (rsaPriv != rsaPriv2);
 		pass = pass && !fail;
@@ -177,8 +177,15 @@ bool ValidateRSA_Encrypt()
 		pass = pass && !fail;
 	}
 	{
-		RSAES<OAEP<SHA1> >::Decryptor rsaPriv(GlobalRNG(), 512);
-		RSAES<OAEP<SHA1> >::Encryptor rsaPub(rsaPriv);
+		RSAES_OAEP_SHA_Decryptor rsaPriv(GlobalRNG(), 512);
+		RSAES_OAEP_SHA_Encryptor rsaPub(rsaPriv);
+
+		fail = !CryptoSystemValidate(rsaPriv, rsaPub);
+		pass = pass && !fail;
+	}
+	{
+		RSAES_OAEP_SHA256_Decryptor rsaPriv(GlobalRNG(), 1024);
+		RSAES_OAEP_SHA256_Encryptor rsaPub(rsaPriv);
 
 		fail = !CryptoSystemValidate(rsaPriv, rsaPub);
 		pass = pass && !fail;
