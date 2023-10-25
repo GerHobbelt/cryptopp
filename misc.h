@@ -701,14 +701,16 @@ template <class T1, class T2> inline const T1 UnsignedMin(const T1& a, const T2&
 		return (T1)b < a ? (T1)b : a;
 }
 
-/// \brief Tests whether a conversion from \p from to \p to is safe to perform
+/// \brief Perform a conversion from \p from to \p to
 /// \tparam T1 class or type
 /// \tparam T2 class or type
 /// \param from the first value
 /// \param to the second value
-/// \return true if its safe to convert \p from to \p to, false otherwise.
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
 /// \details if the function returns true, then it is safe to use \p to. If the function returns false,
 ///  then \p to is undefined and should not be used.
+/// \note for integral conversions, a template specialization should be provided. The specialization
+///  will perform more efficiently, and avoid warnings for truncation and sign compares.
 template <class T1, class T2>
 inline bool SafeConvert(T1 from, T2 &to)
 {
@@ -718,58 +720,19 @@ inline bool SafeConvert(T1 from, T2 &to)
 	return true;
 }
 
-/// \brief Tests whether a conversion from \p from to \p to is safe to perform
-/// \param from the first value
-/// \param to the second value
-/// \return true if its safe to convert \p from to \p to, false otherwise.
-/// \details if the function returns true, then it is safe to use \p to. If the function returns false,
-///  then \p to is undefined and should not be used.
-/// \since Crypto++ 8.7
-template<>
-inline bool SafeConvert(word32 from, word64 &to)
-{
-	to = static_cast<word64>(from);
-	return true;
-}
+// The following specializations are the product of {word32, sword32, word64, sword64} ->
+// {word32, sword32, word64, sword64}. There are 16 of them, but we can omit specializations
+// of {word64} -> {word64}, {word32} -> {word32}, etc.
+//
+// The list below proceeds to list the conversion to word64 (3 each), followed by
+// sword64 (3 each), followed by word32 (3 each), and finally follwed by sword32 (3 each).
 
-/// \brief Tests whether a conversion from \p from to \p to is safe to perform
+/// \brief Perform a conversion from \p from to \p to
 /// \param from the first value
 /// \param to the second value
-/// \return true if its safe to convert \p from to \p to, false otherwise.
-/// \details if the function returns true, then it is safe to use \p to. If the function returns false,
-///  then \p to is undefined and should not be used.
-/// \since Crypto++ 8.7
-template<>
-inline bool SafeConvert(word64 from, word32 &to)
-{
-	if (from > static_cast<word64>(std::numeric_limits<word32>::max()))
-		return false;
-	to = static_cast<word32>(from);
-	return true;
-}
-
-/// \brief Tests whether a conversion from \p from to \p to is safe to perform
-/// \param from the first value
-/// \param to the second value
-/// \return true if its safe to convert \p from to \p to, false otherwise.
-/// \details if the function returns true, then it is safe to use \p to. If the function returns false,
-///  then \p to is undefined and should not be used.
-/// \since Crypto++ 8.7
-template<>
-inline bool SafeConvert(word64 from, sword64 &to)
-{
-	if (from > static_cast<word64>(std::numeric_limits<sword64>::max()))
-		return false;
-	to = static_cast<sword64>(from);
-	return true;
-}
-
-/// \brief Tests whether a conversion from \p from to \p to is safe to perform
-/// \param from the first value
-/// \param to the second value
-/// \return true if its safe to convert \p from to \p to, false otherwise.
-/// \details if the function returns true, then it is safe to use \p to. If the function returns false,
-///  then \p to is undefined and should not be used.
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
 /// \since Crypto++ 8.7
 template<>
 inline bool SafeConvert(sword64 from, word64 &to)
@@ -780,12 +743,136 @@ inline bool SafeConvert(sword64 from, word64 &to)
 	return true;
 }
 
-/// \brief Tests whether a conversion from \p from to \p to is safe to perform
+/// \brief Perform a conversion from \p from to \p to
 /// \param from the first value
 /// \param to the second value
-/// \return true if its safe to convert \p from to \p to, false otherwise.
-/// \details if the function returns true, then it is safe to use \p to. If the function returns false,
-///  then \p to is undefined and should not be used.
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(word32 from, word64 &to)
+{
+	to = static_cast<word64>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(sword32 from, word64 &to)
+{
+	if (from < 0)
+		return false;
+	to = static_cast<word64>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(word64 from, sword64 &to)
+{
+	if (from > static_cast<word64>(std::numeric_limits<sword64>::max()))
+		return false;
+	to = static_cast<sword64>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(word32 from, sword64 &to)
+{
+	to = static_cast<sword64>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(sword32 from, sword64 &to)
+{
+	to = static_cast<sword64>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(word64 from, word32 &to)
+{
+	if (from > static_cast<word64>(std::numeric_limits<word32>::max()))
+		return false;
+	to = static_cast<word32>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(sword64 from, word32 &to)
+{
+	if (from < 0)
+		return false;
+	else if (from > static_cast<sword64>(std::numeric_limits<word32>::max()))
+		return false;
+	to = static_cast<word32>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(sword32 from, word32 &to)
+{
+	if (from < 0)
+		return false;
+	to = static_cast<word32>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
 /// \since Crypto++ 8.7
 template<>
 inline bool SafeConvert(word64 from, sword32 &to)
@@ -796,19 +883,37 @@ inline bool SafeConvert(word64 from, sword32 &to)
 	return true;
 }
 
-/// \brief Tests whether a conversion from \p from to \p to is safe to perform
+/// \brief Perform a conversion from \p from to \p to
 /// \param from the first value
 /// \param to the second value
-/// \return true if its safe to convert \p from to \p to, false otherwise.
-/// \details if the function returns true, then it is safe to use \p to. If the function returns false,
-///  then \p to is undefined and should not be used.
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
 /// \since Crypto++ 8.7
 template<>
-inline bool SafeConvert(sword32 from, word64 &to)
+inline bool SafeConvert(sword64 from, sword32 &to)
 {
-	if (from < 0)
+	if (from > static_cast<sword64>(std::numeric_limits<sword32>::max()))
 		return false;
-	to = static_cast<word64>(from);
+	else if (from < static_cast<sword64>(std::numeric_limits<sword32>::min()))
+		return false;
+	to = static_cast<sword32>(from);
+	return true;
+}
+
+/// \brief Perform a conversion from \p from to \p to
+/// \param from the first value
+/// \param to the second value
+/// \return true if its safe to convert from \p from to \p to, false otherwise.
+/// \details if the function returns true, then it is safe to use \p to. If the function
+///  returns false, then \p to is undefined and should not be used.
+/// \since Crypto++ 8.7
+template<>
+inline bool SafeConvert(word32 from, sword32 &to)
+{
+	if (from > static_cast<word32>(std::numeric_limits<sword32>::max()))
+		return false;
+	to = static_cast<sword32>(from);
 	return true;
 }
 
