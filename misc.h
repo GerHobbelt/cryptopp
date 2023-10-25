@@ -14,6 +14,10 @@
 #include "stdcpp.h"
 #include "trap.h"
 
+#if defined(CRYPTOPP_CXX11)
+# include <type_traits>
+#endif
+
 #if !defined(CRYPTOPP_DOXYGEN_PROCESSING)
 
 #if (CRYPTOPP_MSC_VERSION)
@@ -695,6 +699,12 @@ template <class T> inline const T& STDMAX(const T& a, const T& b)
 template <class T1, class T2> inline const T1 UnsignedMin(const T1& a, const T2& b)
 {
 	CRYPTOPP_COMPILE_ASSERT((sizeof(T1)<=sizeof(T2) && T2(-1)>0) || (sizeof(T1)>sizeof(T2) && T1(-1)>0));
+
+#if defined(CRYPTOPP_CXX11)
+	CRYPTOPP_COMPILE_ASSERT(std::is_unsigned_v<T1> == true);
+	CRYPTOPP_COMPILE_ASSERT(std::is_unsigned_v<T2> == true);
+#endif
+
 	if (sizeof(T1)<=sizeof(T2))
 		return b < (T2)a ? (T1)b : a;
 	else
@@ -783,7 +793,7 @@ inline bool SafeConvert(sword32 from, word64 &to)
 template<>
 inline bool SafeConvert(word64 from, sword64 &to)
 {
-	if (from > static_cast<word64>(std::numeric_limits<sword64>::max()))
+	if (from > static_cast<word64>((std::numeric_limits<sword64>::max)()))
 		return false;
 	to = static_cast<sword64>(from);
 	return true;
@@ -827,7 +837,7 @@ inline bool SafeConvert(sword32 from, sword64 &to)
 template<>
 inline bool SafeConvert(word64 from, word32 &to)
 {
-	if (from > static_cast<word64>(std::numeric_limits<word32>::max()))
+	if (from > static_cast<word64>((std::numeric_limits<word32>::max)()))
 		return false;
 	to = static_cast<word32>(from);
 	return true;
@@ -845,7 +855,7 @@ inline bool SafeConvert(sword64 from, word32 &to)
 {
 	if (from < 0)
 		return false;
-	else if (from > static_cast<sword64>(std::numeric_limits<word32>::max()))
+	else if (from > static_cast<sword64>((std::numeric_limits<word32>::max)()))
 		return false;
 	to = static_cast<word32>(from);
 	return true;
@@ -877,7 +887,7 @@ inline bool SafeConvert(sword32 from, word32 &to)
 template<>
 inline bool SafeConvert(word64 from, sword32 &to)
 {
-	if (from > static_cast<word64>(std::numeric_limits<sword32>::max()))
+	if (from > static_cast<word64>((std::numeric_limits<sword32>::max)()))
 		return false;
 	to = static_cast<sword32>(from);
 	return true;
@@ -893,9 +903,9 @@ inline bool SafeConvert(word64 from, sword32 &to)
 template<>
 inline bool SafeConvert(sword64 from, sword32 &to)
 {
-	if (from > static_cast<sword64>(std::numeric_limits<sword32>::max()))
+	if (from > static_cast<sword64>((std::numeric_limits<sword32>::max)()))
 		return false;
-	else if (from < static_cast<sword64>(std::numeric_limits<sword32>::min()))
+	else if (from < static_cast<sword64>((std::numeric_limits<sword32>::min)()))
 		return false;
 	to = static_cast<sword32>(from);
 	return true;
@@ -911,7 +921,7 @@ inline bool SafeConvert(sword64 from, sword32 &to)
 template<>
 inline bool SafeConvert(word32 from, sword32 &to)
 {
-	if (from > static_cast<word32>(std::numeric_limits<sword32>::max()))
+	if (from > static_cast<word32>((std::numeric_limits<sword32>::max)()))
 		return false;
 	to = static_cast<sword32>(from);
 	return true;
@@ -1277,7 +1287,11 @@ inline word128 NumericLimitsMin()
 template<>
 inline word128 NumericLimitsMax()
 {
+#if defined(CRYPTOPP_APPLE_CLANG_VERSION)
 	return (static_cast<word128>(LWORD_MAX) << 64U) | LWORD_MAX;
+#else
+	return (std::numeric_limits<word128>::max)();
+#endif
 }
 #endif
 
