@@ -388,14 +388,17 @@ extern bool CPU_ProbeSSE2();
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=85684.
 word64 XGetBV(word32 num)
 {
-// Required by Visual Studio 2008 and below and Clang on Windows.
-// Use it for all MSVC-compatible compilers.
-#if defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
+// Visual Studio 2010 and above, 32 and 64-bit
+#if defined(_MSC_VER) && (_MSC_VER >= 1600)
+
+	return _xgetbv (num);
+
+// Visual Studio 2008 and below, 64-bit
+#elif defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	return XGETBV64(num);
 
-// Required by Visual Studio 2008 and below and Clang on Windows.
-// Use it for all MSVC-compatible compilers.
+// Visual Studio 2008 and below, 32-bit
 #elif defined(_M_IX86) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	word32 a=0, d=0;
@@ -446,15 +449,19 @@ word64 XGetBV(word32 num)
 // cpu.cpp (131): E2211 Inline assembly not allowed in inline and template functions
 bool CpuId(word32 func, word32 subfunc, word32 output[4])
 {
-// Required by Visual Studio 2008 and below and Clang on Windows.
-// Use it for all MSVC-compatible compilers.
-#if defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
+// Visual Studio 2010 and above, 32 and 64-bit
+#if defined(_MSC_VER) && (_MSC_VER >= 1600)
+
+	__cpuidex((int *)output, func, subfunc);
+	return true;
+
+// Visual Studio 2008 and below, 64-bit
+#elif defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	CPUID64(func, subfunc, output);
 	return true;
 
-// Required by Visual Studio 2008 and below and Clang on Windows.
-// Use it for all MSVC-compatible compilers.
+// Visual Studio 2008 and below, 32-bit
 #elif defined(_M_IX86) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	__try

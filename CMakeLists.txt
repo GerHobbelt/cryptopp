@@ -515,27 +515,27 @@ endif()
 
 set(cryptopp_SOURCES_ASM)
 
-if (MSVC AND NOT DISABLE_ASM)
-  if (${CMAKE_GENERATOR_PLATFORM} MATCHES ".*arm(64)?$")
-    message(STATUS "Disabling ASM because ARM is specified as target platform.")
-  else ()
-    enable_language(ASM_MASM)
-    list(APPEND cryptopp_SOURCES_ASM
-      ${SRC_DIR}/rdrand.asm
-      ${SRC_DIR}/rdseed.asm
-      )
-    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-      list(APPEND cryptopp_SOURCES_ASM
-        ${SRC_DIR}/x64dll.asm
-        ${SRC_DIR}/x64masm.asm
-        )
-      set_source_files_properties(${cryptopp_SOURCES_ASM} PROPERTIES COMPILE_DEFINITIONS "_M_X64")
-    else ()
-      set_source_files_properties(${cryptopp_SOURCES_ASM} PROPERTIES COMPILE_DEFINITIONS "_M_X86" COMPILE_FLAGS "/safeseh")
-    endif ()
-    set_source_files_properties(${cryptopp_SOURCES_ASM} PROPERTIES LANGUAGE ASM_MASM)
-  endif ()
-endif ()
+#if (MSVC AND NOT DISABLE_ASM)
+#  if (${CMAKE_GENERATOR_PLATFORM} MATCHES ".*arm(64)?$")
+#    message(STATUS "Disabling ASM because ARM is specified as target platform.")
+#  else ()
+#    enable_language(ASM_MASM)
+#    list(APPEND cryptopp_SOURCES_ASM
+#      ${SRC_DIR}/rdrand.asm
+#      ${SRC_DIR}/rdseed.asm
+#      )
+#    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+#      list(APPEND cryptopp_SOURCES_ASM
+#        ${SRC_DIR}/x64dll.asm
+#        ${SRC_DIR}/x64masm.asm
+#        )
+#      set_source_files_properties(${cryptopp_SOURCES_ASM} PROPERTIES COMPILE_DEFINITIONS "_M_X64")
+#    else ()
+#      set_source_files_properties(${cryptopp_SOURCES_ASM} PROPERTIES COMPILE_DEFINITIONS "_M_X86" COMPILE_FLAGS "/safeseh")
+#    endif ()
+#    set_source_files_properties(${cryptopp_SOURCES_ASM} PROPERTIES LANGUAGE ASM_MASM)
+#  endif ()
+#endif ()
 
 #============================================================================
 # Architecture flags
