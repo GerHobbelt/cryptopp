@@ -22,7 +22,7 @@ void f(int n) noexcept(false)
         throw std::runtime_error("Oops");
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char** argv)
 {
     f(argc);
     return 0;
