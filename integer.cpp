@@ -80,6 +80,7 @@
 		#include <minwindef.h> // __shiftleft128
 	#endif
 	#include <intrin.h>
+	#include <windows.h>
 #endif
 
 #ifdef __DECCXX

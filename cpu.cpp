@@ -393,14 +393,17 @@ word64 XGetBV(word32 num)
 #if defined(CRYPTOPP_DISABLE_ASM)
 	return 0;
 
-// Required by Visual Studio 2008 and below and Clang on Windows.
-// Use it for all MSVC-compatible compilers.
+// Visual Studio 2010 and above, 32 and 64-bit
+#elif defined(_MSC_VER) && (_MSC_VER >= 1600)
+
+	return _xgetbv(num);
+
+// Visual Studio 2008 and below, 64-bit
 #elif defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	return XGETBV64(num);
 
-// Required by Visual Studio 2008 and below and Clang on Windows.
-// Use it for all MSVC-compatible compilers.
+// Visual Studio 2008 and below, 32-bit
 #elif defined(_M_IX86) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	word32 a=0, d=0;
@@ -457,15 +460,19 @@ bool CpuId(word32 func, word32 subfunc, word32 output[4])
 	output[0] = output[1] = output[2] = output[3] = 0;
 	return false;
 
-// Required by Visual Studio 2008 and below and Clang on Windows.
-// Use it for all MSVC-compatible compilers.
+// Visual Studio 2010 and above, 32 and 64-bit
+#elif defined(_MSC_VER) && (_MSC_VER >= 1600)
+
+	__cpuidex((int *)output, func, subfunc);
+	return true;
+
+// Visual Studio 2008 and below, 64-bit
 #elif defined(_M_X64) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	CPUID64(func, subfunc, output);
 	return true;
 
-// Required by Visual Studio 2008 and below and Clang on Windows.
-// Use it for all MSVC-compatible compilers.
+// Visual Studio 2008 and below, 32-bit
 #elif defined(_M_IX86) && defined(CRYPTOPP_MS_STYLE_INLINE_ASSEMBLY)
 
 	__try

@@ -36,11 +36,11 @@ cmake_minimum_required(VERSION 2.8.6)
 if (${CMAKE_VERSION} VERSION_LESS "3.0.0")
   project(cryptopp)
   set(cryptopp_VERSION_MAJOR 8)
-  set(cryptopp_VERSION_MINOR 6)
+  set(cryptopp_VERSION_MINOR 9)
   set(cryptopp_VERSION_PATCH 0)
 else ()
   cmake_policy(SET CMP0048 NEW)
-  project(cryptopp VERSION 8.6.0)
+  project(cryptopp VERSION 8.9.0)
   if (NOT ${CMAKE_VERSION} VERSION_LESS "3.1.0")
     cmake_policy(SET CMP0054 NEW)
   endif ()
@@ -78,7 +78,7 @@ option(BUILD_TESTING "Build library tests" ON)
 option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 option(USE_INTERMEDIATE_OBJECTS_TARGET "Use a common intermediate objects target for the static and shared library targets" ON)
 
-# These are IA-32 options.
+# These are IA-32 options. TODO: Add ARM A-32, Aarch64 and Power8 options.
 option(DISABLE_ASM "Disable ASM" OFF)
 option(DISABLE_SSSE3 "Disable SSSE3" OFF)
 option(DISABLE_SSE4 "Disable SSE4" OFF)
@@ -105,6 +105,8 @@ option(DISABLE_POWER9 "Disable POWER9" OFF)
 
 set(CRYPTOPP_DATA_DIR "" CACHE PATH "Crypto++ test data directory")
 
+option(CRYPTOPP_ENABLE_COMPILER_CHECKS "Enable compiler checks and additional compiler options for cryptopp" ON)
+
 #============================================================================
 # Compiler options
 #============================================================================
@@ -122,6 +124,9 @@ endif()
 
 # Always 1 ahead in Master. Also see http://groups.google.com/forum/#!topic/cryptopp-users/SFhqLDTQPG4
 set(LIB_VER ${cryptopp_VERSION_MAJOR}${cryptopp_VERSION_MINOR}${cryptopp_VERSION_PATCH})
+
+# Don't use RPATH's. The resulting binary could fail a security audit.
+set(CMAKE_MACOSX_RPATH 0)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   list(APPEND CRYPTOPP_COMPILE_OPTIONS -wd68 -wd186 -wd279 -wd327 -wd161 -wd3180)
