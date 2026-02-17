@@ -53,6 +53,9 @@ public:
 		: m_timerUnit(unit), m_stuckAtZero(stuckAtZero), m_started(false)
 		, m_start(0), m_last(0) {}
 
+	// fix warning C5204: 'CryptoPP::ThreadUserTimer', etc.: class has virtual functions, but its trivial destructor is not virtual; instances of objects derived from this class may not be destructed correctly
+	virtual ~TimerBase() = default;
+ 
 	/// \brief Retrieve the current timer value
 	/// \return the current timer value
 	virtual TimerWord GetCurrentTimerValue() =0;
