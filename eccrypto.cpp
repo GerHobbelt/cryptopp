@@ -838,3 +838,11 @@ void DL_PrivateKey_ECGDSA<EC>::DEREncodePrivateKey(BufferedTransformation &bt) c
 NAMESPACE_END
 
 #endif
+
+#if CRYPTOPP_GCC_DIAGNOSTIC_AVAILABLE
+# pragma GCC diagnostic pop
+#endif
+
+#if CRYPTOPP_MSC_VERSION
+# pragma warning(pop)
+#endif

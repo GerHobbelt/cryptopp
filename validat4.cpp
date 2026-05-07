@@ -192,6 +192,9 @@ bool ValidateHmacDRBG()
 class CipherFactory
 {
 public:
+	// warning C5204: 'CryptoPP::Test::CipherFactory': class has virtual functions, but its trivial destructor is not virtual; instances of objects derived from this class may not be destructed correctly
+	virtual ~CipherFactory() = default;
+
 	virtual unsigned int BlockSize() const =0;
 	virtual unsigned int KeyLength() const =0;
 
